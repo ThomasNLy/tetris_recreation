@@ -24,3 +24,9 @@ void debugPowerUpsOnBoard() {
     }
   }
 }
+
+void showMouseCoordinates(){
+  fill(255, 0, 0);
+  textSize(15);
+  text("x: " + mouseX + "\ny: " + mouseY, mouseX, mouseY);
+}

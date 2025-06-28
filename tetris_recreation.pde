@@ -1,11 +1,29 @@
+//------------GAMESTATES--------------
+final int MAINMENU = 0;
+final int CONTROLSMENU = 1;
+final int PLAYINGGAME = 2;
+int GAMESTATE = MAINMENU;
+//int GAMESTATE = PLAYINGGAME;
+
+//-------------MENU OPTIONS--------------
+final int START_OPTION = 0;
+final int CONTROLS_OPTION = 1;
+final int [] MENU_OPTIONS = {START_OPTION, CONTROLS_OPTION}; // keeps track of the various options availabe, used to show which screne to display
+int MENU_OPTION_SELECTED = 0; // keeps track of which option selected by using a number: 0, 1, 2, etc.
+final int [] MENU_CURSOR_HIGHLIGHTED_SELECTION = {720/2 - 20, 720/2 + 30}; //used for the y coordinate of the menu cursor
 
 //-------------------Colours---------------------
 final color BLACK = #00291a;
 final color GREY = #989898;
 final color TEALGREEN = #e6f0ea;
 final color TEALGREEN2 = #e8f3f1;
+final color WHITE = #ffffff;
 
 //-------------------------------------------------------------
+
+PFont regularFont;
+PFont boldFont;
+
 
 Shape currentShape;
 Shape nextShape;
@@ -19,6 +37,8 @@ int easyBarUsage = 0; // morph into bar shape power up useage
 
 
 void setup() {
+  regularFont = createFont("SansSerif.plain", 12);
+  boldFont = createFont("SansSerif.bold", 12);
   size(1280, 720);
   gridSpotColour = new color[boardWidth][boardHeight];
   for (int x = 0; x < 10; x++) {
@@ -34,8 +54,93 @@ void setup() {
   powerUpGridSpot = new PowerUp[boardWidth][boardHeight];
 }
 void draw() {
-  background(TEALGREEN);
+  switch(GAMESTATE) {
+  case MAINMENU:
+    mainMenu();
+    break;
+  case CONTROLSMENU:
+    controlsMenu();
+    break;
+  case PLAYINGGAME:
+    textFont(regularFont);
+    runGame();
+    break;
+  }
+}
 
+void keyPressed() {
+  switch(GAMESTATE) {
+  case MAINMENU:
+
+    if (keyCode == ENTER){
+      if(MENU_OPTIONS[MENU_OPTION_SELECTED] == START_OPTION){
+        GAMESTATE = PLAYINGGAME;
+      }
+      else if (MENU_OPTIONS[MENU_OPTION_SELECTED] == CONTROLS_OPTION){
+        println("controls Menu");
+        GAMESTATE = CONTROLSMENU;
+      }
+    }
+    if (key == 'w') {
+      MENU_OPTION_SELECTED -= 1;
+    }
+    if (key == 's') {
+      MENU_OPTION_SELECTED += 1;
+    }
+    if(MENU_OPTION_SELECTED > 1){
+      MENU_OPTION_SELECTED = 0;
+    }
+    else if(MENU_OPTION_SELECTED < 0){
+      MENU_OPTION_SELECTED = 1;
+    }
+    
+    break;
+
+  case CONTROLSMENU:
+    if (keyCode == BACKSPACE){
+      GAMESTATE = MAINMENU;
+    }
+    break;
+  case PLAYINGGAME:
+    if (key == 'a') {
+      currentShape.moveLeft();
+    }
+    if (key == 'd') {
+      currentShape.moveRight();
+    }
+    if (key == 's') {
+      currentShape.moveDown();
+    }
+    if (key == 'e') {
+      currentShape.rotateClockwise();
+    }
+    if (key == 'q') {
+      currentShape.rotateCounterClockwise();
+    }
+    if (keyCode == 32) {
+      currentShape.dropShape();
+    }
+    if (key == 'r') {
+      swapShape();
+    }
+
+    if (keyCode == 10) { //enter key
+      setup();
+    }
+
+    if (key == 'f' && easyBarUsage > 0) {
+      easyBarUsage -= 1;
+      for (int i = 0; i < 4; i++) {
+        currentShape.blocks[i][0] = BARSHAPE[i][0] + 5;
+        currentShape.blocks[i][1] = BARSHAPE[i][1];
+      }
+    }
+    break;
+  }
+}
+
+void runGame() {
+  background(TEALGREEN);
   for (int x = 0; x < boardWidth; x++) {
     for (int y = 0; y < boardHeight; y++) {
       stroke(TEALGREEN2);
@@ -77,50 +182,14 @@ void draw() {
   if (checkGameOver()) {
     fill(GREY);
     rect(30, height/2 - 160, 310, 80, 10);
-    fill(255);
+    fill(WHITE);
     textSize(50);
-    text("GAME OVER", 40, height/2 - 100);
+    text("GAME OVER", 33, height/2 - 100);
   }
 
 
   //-------------DebugCode--------------
   //debug();
-}
-
-void keyPressed() {
-  if (key == 'a') {
-    currentShape.moveLeft();
-  }
-  if (key == 'd') {
-    currentShape.moveRight();
-  }
-  if (key == 's') {
-    currentShape.moveDown();
-  }
-  if (key == 'e') {
-    currentShape.rotateClockwise();
-  }
-  if (key == 'q') {
-    currentShape.rotateCounterClockwise();
-  }
-  if (keyCode == 32) {
-    currentShape.dropShape();
-  }
-  if (key == 'r') {
-    swapShape();
-  }
-
-  if (keyCode == 10) { //enter key
-    setup();
-  }
-
-  if (key == 'f' && easyBarUsage > 0) {
-    easyBarUsage -= 1;
-    for (int i = 0; i < 4; i++) {
-      currentShape.blocks[i][0] = BARSHAPE[i][0] + 5;
-      currentShape.blocks[i][1] = BARSHAPE[i][1];
-    }
-  }
 }
 
 void recordShapeLanded(Shape s) {
@@ -227,6 +296,7 @@ void previewNextShape() {
   }
 }
 
+//------------------------------------UI----------------
 void UI() {
   previewNextShape();
 
@@ -275,7 +345,7 @@ void gainPowerUp(int rowNumber) {
     if (powerUpGridSpot[x][rowNumber] != null) {
       println("filled");
       PowerUp powerUp = powerUpGridSpot[x][rowNumber];
-      if (powerUp.type == CLEARBOARD){
+      if (powerUp.type == CLEARBOARD) {
         points += 50;
       }
       powerUpGridSpot[x][rowNumber].activate();
@@ -297,4 +367,40 @@ void dropPowerUpsDown(int startingRow) {
       powerUpGridSpot[x][y] = powerUpGridSpot[x][y-1];
     }
   }
+}
+
+//--------------------------MAIN MENU/START SCREEN----------------------
+void mainMenu() {
+  textFont(boldFont);
+  background(TEALGREEN);
+  fill(BLACK);
+  textSize(80);
+  textAlign(CENTER);
+  text("TETRIS CRASH", width/2, height/2 - 100);
+  textAlign(LEFT);
+
+  textFont(regularFont);
+  textSize(25);
+  text("START", width/2 - 35, height/2 - 20);
+  text("CONTROLS", width/2 - 35, height/2 + 30);
+
+  circle(width/2 - 50, MENU_CURSOR_HIGHLIGHTED_SELECTION[MENU_OPTION_SELECTED] - 10, 20); 
+  showMouseCoordinates();
+}
+
+void controlsMenu() {
+  textFont(boldFont);
+  background(TEALGREEN);
+  fill(BLACK);
+  textSize(80);
+  textAlign(CENTER);
+  text("CONTROLS MENU", width/2, height/2 - 100);
+  textAlign(LEFT);
+
+  textFont(regularFont);
+  textSize(25);
+  text("press backspace to go back", width/2 - 35, height/2 - 20);
+  
+ 
+  showMouseCoordinates();
 }
