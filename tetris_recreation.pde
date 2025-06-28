@@ -70,7 +70,6 @@ void draw() {
     nextShape = new Shape(5, 0, occupiedGridSpot);
   }
   //----------------------------------
-  //clearFullRows(19);
   UI();
 
 
@@ -157,6 +156,7 @@ void clearFullRows() {
   for (int y = boardHeight-1; y > 1; y--) {
     if (checkFullRow(y)) {
       numRowsCleared++;
+      points += 10;
       clearRow(y);
       if (y > startingRowCleared) {
         startingRowCleared = y;
@@ -274,6 +274,10 @@ void gainPowerUp(int rowNumber) {
   for (int x = 0; x < boardWidth; x++) {
     if (powerUpGridSpot[x][rowNumber] != null) {
       println("filled");
+      PowerUp powerUp = powerUpGridSpot[x][rowNumber];
+      if (powerUp.type == CLEARBOARD){
+        points += 50;
+      }
       powerUpGridSpot[x][rowNumber].activate();
       powerUpGridSpot[x][rowNumber] = null;
     }
