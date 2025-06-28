@@ -1,3 +1,6 @@
+/*
+need to implement into the game
+*/
 JSONObject saveData;
 String saveDataFile = "data/saveData.json";
 void InitSaveSystem() {
