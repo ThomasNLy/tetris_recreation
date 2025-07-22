@@ -3,14 +3,16 @@ final int MAINMENU = 0;
 final int CONTROLSMENU = 1;
 final int PLAYINGGAME = 2;
 int GAMESTATE = MAINMENU;
+//int GAMESTATE = CONTROLSMENU;
 //int GAMESTATE = PLAYINGGAME;
 
 //-------------MENU OPTIONS--------------
 final int START_OPTION = 0;
 final int CONTROLS_OPTION = 1;
-final int [] MENU_OPTIONS = {START_OPTION, CONTROLS_OPTION}; // keeps track of the various options availabe, used to show which screen to display
+final int EXIT_OPTION = 2;
+final int [] MENU_OPTIONS = {START_OPTION, CONTROLS_OPTION, EXIT_OPTION}; // keeps track of the various options availabe, used to show which screen to display
 int MENU_OPTION_SELECTED = 0; // keeps track of which option selected by using a number: 0, 1, 2, etc.
-final int [] MENU_CURSOR_HIGHLIGHTED_SELECTION = {720/2 - 20, 720/2 + 30}; //used for the y coordinate of the menu cursor
+final int [] MENU_CURSOR_HIGHLIGHTED_SELECTION = {720/2 - 20, 720/2 + 30, 720/2 + 80}; //used for the y coordinate of the menu cursor
 
 //-------------------Colours---------------------
 final color BLACK = #00291a;
@@ -80,6 +82,10 @@ void keyPressed() {
         println("controls Menu");
         GAMESTATE = CONTROLSMENU;
       }
+       else if (MENU_OPTIONS[MENU_OPTION_SELECTED] == EXIT_OPTION){
+        println("exiting game");
+        exit();
+      }
     }
     if (key == 'w') {
       MENU_OPTION_SELECTED -= 1;
@@ -87,11 +93,11 @@ void keyPressed() {
     if (key == 's') {
       MENU_OPTION_SELECTED += 1;
     }
-    if(MENU_OPTION_SELECTED > 1){
+    if(MENU_OPTION_SELECTED > MENU_OPTIONS.length - 1){
       MENU_OPTION_SELECTED = 0;
     }
     else if(MENU_OPTION_SELECTED < 0){
-      MENU_OPTION_SELECTED = 1;
+      MENU_OPTION_SELECTED = MENU_OPTIONS.length - 1;
     }
     
     break;
@@ -381,10 +387,13 @@ void mainMenu() {
 
   textFont(regularFont);
   textSize(25);
-  text("START", width/2 - 35, height/2 - 20);
-  text("CONTROLS", width/2 - 35, height/2 + 30);
+  text("START", width/2 - 50, height/2 - 20);
+  text("CONTROLS", width/2 - 50, height/2 + 30);
+  text("EXIT", width/2 - 50, height/2 + 80);
+  
+  text("Press enter to select", width/2 - 100, height/2 + 150);
 
-  circle(width/2 - 50, MENU_CURSOR_HIGHLIGHTED_SELECTION[MENU_OPTION_SELECTED] - 10, 20); 
+  circle(width/2 - 70, MENU_CURSOR_HIGHLIGHTED_SELECTION[MENU_OPTION_SELECTED] - 10, 20); 
   showMouseCoordinates();
 }
 
@@ -394,12 +403,19 @@ void controlsMenu() {
   fill(BLACK);
   textSize(80);
   textAlign(CENTER);
-  text("CONTROLS MENU", width/2, height/2 - 100);
+  text("CONTROLS MENU", width/2, height/2 - 200);
   textAlign(LEFT);
+  
 
   textFont(regularFont);
   textSize(25);
-  text("press backspace to go back", width/2 - 35, height/2 - 20);
+  text("use the ASD keys to control the shape:\nA: moves it to the left\nD: moves it to the right\nS: moves it down", 
+  width/2 - 250, height/2 - 140);
+  text("use the Q/E key to rotate the shape:\nQ: rotates it to the left\nE: rotates it to the right", 
+  width/2 - 250, height/2 + 30);
+  text("press the SPACEBAR to instantly drop the shape", 
+  width/2 - 250, height/2 + 170);
+  text("press BACKSPACE key to return to the Main Menu", width/2 - 250, height/2 + 230);
   
  
   showMouseCoordinates();
