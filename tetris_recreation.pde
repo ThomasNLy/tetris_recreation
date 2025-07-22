@@ -8,7 +8,7 @@ int GAMESTATE = MAINMENU;
 //-------------MENU OPTIONS--------------
 final int START_OPTION = 0;
 final int CONTROLS_OPTION = 1;
-final int [] MENU_OPTIONS = {START_OPTION, CONTROLS_OPTION}; // keeps track of the various options availabe, used to show which screne to display
+final int [] MENU_OPTIONS = {START_OPTION, CONTROLS_OPTION}; // keeps track of the various options availabe, used to show which screen to display
 int MENU_OPTION_SELECTED = 0; // keeps track of which option selected by using a number: 0, 1, 2, etc.
 final int [] MENU_CURSOR_HIGHLIGHTED_SELECTION = {720/2 - 20, 720/2 + 30}; //used for the y coordinate of the menu cursor
 
