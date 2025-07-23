@@ -5,6 +5,7 @@ final int PLAYINGGAME = 2;
 int GAMESTATE = MAINMENU;
 //int GAMESTATE = CONTROLSMENU;
 //int GAMESTATE = PLAYINGGAME;
+boolean paused = false;
 
 //-------------MENU OPTIONS--------------
 final int START_OPTION = 0;
@@ -37,7 +38,21 @@ int dropTimer;
 int points;
 int easyBarUsage = 0; // morph into bar shape power up useage
 
+void restartGame(){
+  gridSpotColour = new color[boardWidth][boardHeight];
+  for (int x = 0; x < 10; x++) {
+    for (int y = 0; y < 20; y++) {
+      gridSpotColour[x][y] = BLACK; // default colour for all cells in the gameboard grid
+    }
+  }
 
+  occupiedGridSpot = new boolean[boardWidth][boardHeight];
+  currentShape = new Shape(5, 0, occupiedGridSpot);
+  nextShape = new Shape(5, 0, occupiedGridSpot);
+  points = 0;
+  powerUpGridSpot = new PowerUp[boardWidth][boardHeight];
+  
+}
 void setup() {
   regularFont = createFont("SansSerif.plain", 12);
   boldFont = createFont("SansSerif.bold", 12);
@@ -54,6 +69,9 @@ void setup() {
   nextShape = new Shape(5, 0, occupiedGridSpot);
   points = 0;
   powerUpGridSpot = new PowerUp[boardWidth][boardHeight];
+  
+  GAMESTATE = MAINMENU;
+  paused = false;
 }
 void draw() {
   switch(GAMESTATE) {
@@ -74,15 +92,13 @@ void keyPressed() {
   switch(GAMESTATE) {
   case MAINMENU:
 
-    if (keyCode == ENTER){
-      if(MENU_OPTIONS[MENU_OPTION_SELECTED] == START_OPTION){
+    if (keyCode == ENTER) {
+      if (MENU_OPTIONS[MENU_OPTION_SELECTED] == START_OPTION) {
         GAMESTATE = PLAYINGGAME;
-      }
-      else if (MENU_OPTIONS[MENU_OPTION_SELECTED] == CONTROLS_OPTION){
+      } else if (MENU_OPTIONS[MENU_OPTION_SELECTED] == CONTROLS_OPTION) {
         println("controls Menu");
         GAMESTATE = CONTROLSMENU;
-      }
-       else if (MENU_OPTIONS[MENU_OPTION_SELECTED] == EXIT_OPTION){
+      } else if (MENU_OPTIONS[MENU_OPTION_SELECTED] == EXIT_OPTION) {
         println("exiting game");
         exit();
       }
@@ -93,54 +109,67 @@ void keyPressed() {
     if (key == 's') {
       MENU_OPTION_SELECTED += 1;
     }
-    if(MENU_OPTION_SELECTED > MENU_OPTIONS.length - 1){
+    if (MENU_OPTION_SELECTED > MENU_OPTIONS.length - 1) {
       MENU_OPTION_SELECTED = 0;
-    }
-    else if(MENU_OPTION_SELECTED < 0){
+    } else if (MENU_OPTION_SELECTED < 0) {
       MENU_OPTION_SELECTED = MENU_OPTIONS.length - 1;
     }
-    
+
     break;
 
   case CONTROLSMENU:
-    if (keyCode == BACKSPACE){
+    if (keyCode == BACKSPACE) {
       GAMESTATE = MAINMENU;
     }
     break;
   case PLAYINGGAME:
-    if (key == 'a') {
-      currentShape.moveLeft();
-    }
-    if (key == 'd') {
-      currentShape.moveRight();
-    }
-    if (key == 's') {
-      currentShape.moveDown();
-    }
-    if (key == 'e') {
-      currentShape.rotateClockwise();
-    }
-    if (key == 'q') {
-      currentShape.rotateCounterClockwise();
-    }
-    if (keyCode == 32) {
-      currentShape.dropShape();
-    }
-    if (key == 'r') {
-      swapShape();
-    }
+    if (!paused) {
+      if (key == 'a') {
+        currentShape.moveLeft();
+      }
+      if (key == 'd') {
+        currentShape.moveRight();
+      }
+      if (key == 's') {
+        currentShape.moveDown();
+      }
+      if (key == 'e') {
+        currentShape.rotateClockwise();
+      }
+      if (key == 'q') {
+        currentShape.rotateCounterClockwise();
+      }
+      if (keyCode == 32) {
+        currentShape.dropShape();
+      }
+      if (key == 'r') {
+        swapShape();
+      }
 
-    if (keyCode == 10) { //enter key
-      setup();
-    }
+      if (keyCode == 10) { //enter key
+        //setup();
+        restartGame();
+      }
 
-    if (key == 'f' && easyBarUsage > 0) {
-      easyBarUsage -= 1;
-      for (int i = 0; i < 4; i++) {
-        currentShape.blocks[i][0] = BARSHAPE[i][0] + 5;
-        currentShape.blocks[i][1] = BARSHAPE[i][1];
+      if (key == 'f' && easyBarUsage > 0) {
+        easyBarUsage -= 1;
+        for (int i = 0; i < 4; i++) {
+          currentShape.blocks[i][0] = BARSHAPE[i][0] + 5;
+          currentShape.blocks[i][1] = BARSHAPE[i][1];
+        }
+      }
+    } 
+    else {
+      if (keyCode == BACKSPACE) {
+        setup();
       }
     }
+
+    if (key == ESC) {
+      key = 0; // prevents the game from closing when pressing escape
+      paused = !paused;
+    }
+
     break;
   }
 }
@@ -152,8 +181,6 @@ void runGame() {
       stroke(TEALGREEN2);
       fill(gridSpotColour[x][y]);
       rect(x* 36, y * 36, 36, 36, 10);
-      textSize(12);
-      text(y, 390, y*36 + 20);
       if (powerUpGridSpot[x][y] != null) {
         powerUpGridSpot[x][y].display();
       }
@@ -167,10 +194,12 @@ void runGame() {
   rect(0, 0, 360, 720);
 
   //----------------shape code------------
-  dropTimer++;
-  if (dropTimer > 30) {
-    dropTimer = 0;
-    currentShape.moveDown();
+  if (!paused) {
+    dropTimer++;
+    if (dropTimer > 30) {
+      dropTimer = 0;
+      currentShape.moveDown();
+    }
   }
   currentShape.display();
   currentShape.landingZone();
@@ -189,8 +218,12 @@ void runGame() {
     fill(GREY);
     rect(30, height/2 - 160, 310, 80, 10);
     fill(WHITE);
+    textAlign(LEFT);
     textSize(50);
     text("GAME OVER", 33, height/2 - 100);
+  }
+  if (paused) {
+    pauseMenu();
   }
 
 
@@ -305,7 +338,7 @@ void previewNextShape() {
 //------------------------------------UI----------------
 void UI() {
   previewNextShape();
-
+  textAlign(LEFT);
   fill(0);
   textSize(30);
   text("Points: " + points, 700, 100);
@@ -390,7 +423,7 @@ void mainMenu() {
   text("START", width/2 - 50, height/2 - 20);
   text("CONTROLS", width/2 - 50, height/2 + 30);
   text("EXIT", width/2 - 50, height/2 + 80);
-  
+
   text("Press enter to select", width/2 - 100, height/2 + 150);
 
   circle(width/2 - 70, MENU_CURSOR_HIGHLIGHTED_SELECTION[MENU_OPTION_SELECTED] - 10, 20); 
@@ -405,18 +438,31 @@ void controlsMenu() {
   textAlign(CENTER);
   text("CONTROLS MENU", width/2, height/2 - 200);
   textAlign(LEFT);
-  
+
 
   textFont(regularFont);
   textSize(25);
   text("use the ASD keys to control the shape:\nA: moves it to the left\nD: moves it to the right\nS: moves it down", 
-  width/2 - 250, height/2 - 140);
+    width/2 - 250, height/2 - 140);
   text("use the Q/E key to rotate the shape:\nQ: rotates it to the left\nE: rotates it to the right", 
-  width/2 - 250, height/2 + 30);
+    width/2 - 250, height/2 + 30);
   text("press the SPACEBAR to instantly drop the shape", 
-  width/2 - 250, height/2 + 170);
+    width/2 - 250, height/2 + 170);
   text("press BACKSPACE key to return to the Main Menu", width/2 - 250, height/2 + 230);
-  
- 
+
+
   showMouseCoordinates();
+}
+
+void pauseMenu() {
+  fill(50, 100);
+  rect(0, 0, width, height);
+  textFont(boldFont);
+  textSize(80);
+  fill(WHITE);
+  textAlign(CENTER);
+  text("PAUSED", width/2, height/2);
+  textFont(regularFont);
+  textSize(25);
+  text("press BACKSPACE key to return to the Main Menu", width/2 + 20, height/2 + 100);
 }
