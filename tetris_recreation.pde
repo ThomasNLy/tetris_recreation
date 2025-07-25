@@ -443,12 +443,14 @@ void controlsMenu() {
   textFont(regularFont);
   textSize(25);
   text("use the ASD keys to control the shape:\nA: moves it to the left\nD: moves it to the right\nS: moves it down", 
-    width/2 - 250, height/2 - 140);
+    width/2 - 400, height/2 - 140);
   text("use the Q/E key to rotate the shape:\nQ: rotates it to the left\nE: rotates it to the right", 
-    width/2 - 250, height/2 + 30);
+    width/2  + 150, height/2 - 140);
+  
   text("press the SPACEBAR to instantly drop the shape", 
-    width/2 - 250, height/2 + 170);
-  text("press BACKSPACE key to return to the Main Menu", width/2 - 250, height/2 + 230);
+    width/2 - 250, height/2 + 50);
+  text("press BACKSPACE key to return to the Main Menu", width/2 - 250, height/2 + 100);
+  text("press ESCAPE key to pause/unpause the game", width/2 - 250, height/2 + 150);
 
 
   showMouseCoordinates();
