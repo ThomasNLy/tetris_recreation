@@ -35,9 +35,12 @@ color gridSpotColour[][];
 boolean occupiedGridSpot[][];
 PowerUp powerUpGridSpot[][]; // the spot where the powerup landed
 int dropTimer;
-int points;
+
 int easyBarUsage = 0; // morph into bar shape power up useage
 
+//-----------------------SCORING AND HIGHSCORE----------
+int points;
+int highscore;
 void restartGame(){
   gridSpotColour = new color[boardWidth][boardHeight];
   for (int x = 0; x < 10; x++) {
@@ -148,7 +151,9 @@ void keyPressed() {
 
       if (keyCode == 10) { //enter key
         //setup();
+        checkNewHighScore();
         restartGame();
+        
       }
 
       if (key == 'f' && easyBarUsage > 0) {
@@ -467,4 +472,13 @@ void pauseMenu() {
   textFont(regularFont);
   textSize(25);
   text("press BACKSPACE key to return to the Main Menu", width/2 + 20, height/2 + 100);
+}
+
+//-----------------------Check if a highscore---------
+void checkNewHighScore(){
+  if(points > highscore){
+    highscore = points;
+    InitSaveSystem();
+    saveData(highscore);
+  }
 }
