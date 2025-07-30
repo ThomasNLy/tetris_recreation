@@ -75,6 +75,9 @@ void setup() {
   
   GAMESTATE = MAINMENU;
   paused = false;
+  
+  InitSaveSystem();
+  highscore = loadData().getInt("highscore");
 }
 void draw() {
   switch(GAMESTATE) {
@@ -156,7 +159,7 @@ void keyPressed() {
         
       }
 
-      if (key == 'f' && easyBarUsage > 0) {
+      if (key == 'f' /*&& easyBarUsage > 0*/) {
         easyBarUsage -= 1;
         for (int i = 0; i < 4; i++) {
           currentShape.blocks[i][0] = BARSHAPE[i][0] + 5;
@@ -347,6 +350,9 @@ void UI() {
   fill(0);
   textSize(30);
   text("Points: " + points, 700, 100);
+  if(highscore > 0){
+  text("High Score: " + highscore, 890, 100);
+  }
   fill(0);
   textSize(30);
   text("easy BAR: " + easyBarUsage, 700, 150);
