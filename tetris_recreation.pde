@@ -74,6 +74,7 @@ void setup() {
   powerUpGridSpot = new PowerUp[boardWidth][boardHeight];
   
   GAMESTATE = MAINMENU;
+
   paused = false;
   
   InitSaveSystem();
@@ -159,7 +160,7 @@ void keyPressed() {
         
       }
 
-      if (key == 'f' /*&& easyBarUsage > 0*/) {
+      if (key == 'f' && easyBarUsage > 0) {
         easyBarUsage -= 1;
         for (int i = 0; i < 4; i++) {
           currentShape.blocks[i][0] = BARSHAPE[i][0] + 5;
@@ -434,8 +435,9 @@ void mainMenu() {
   text("START", width/2 - 50, height/2 - 20);
   text("CONTROLS", width/2 - 50, height/2 + 30);
   text("EXIT", width/2 - 50, height/2 + 80);
-
-  text("Press enter to select", width/2 - 100, height/2 + 150);
+ 
+  text("Press enter to select", width/2 - 125, height/2 + 150);
+  text("Use W and S key to pick an option", width/2 - 190, height/2 + 200);
 
   circle(width/2 - 70, MENU_CURSOR_HIGHLIGHTED_SELECTION[MENU_OPTION_SELECTED] - 10, 20); 
   showMouseCoordinates();
@@ -447,21 +449,27 @@ void controlsMenu() {
   fill(BLACK);
   textSize(80);
   textAlign(CENTER);
-  text("CONTROLS MENU", width/2, height/2 - 200);
+  text("CONTROLS MENU", width/2, height/2 - 250);
   textAlign(LEFT);
 
 
   textFont(regularFont);
-  textSize(25);
+  textSize(22);
   text("use the ASD keys to control the shape:\nA: moves it to the left\nD: moves it to the right\nS: moves it down", 
-    width/2 - 400, height/2 - 140);
-  text("use the Q/E key to rotate the shape:\nQ: rotates it to the left\nE: rotates it to the right", 
-    width/2  + 150, height/2 - 140);
+    width/2 - 500, height/2 - 190);
+   text("power ups:\nR: to swap the current shape with the next \none in the preview" +
+  "\nF: to turn the current shape into a BAR shape, \nconsumes easy bar usage", 
+    width/2  - 500, height/2);
+  text("collect power ups by clearing a row with blocks \nthat contain a circular dot on them." +
+  "\nblack dots clear the entire game board, \nwhite dots to gain an easy bar usage", 
+    width/2  - 500, height/2 + 180);
   
+  text("use the Q/E key to rotate the shape:\nQ: rotates it to the left\nE: rotates it to the right", 
+    width/2  + 80, height/2 - 190);  
   text("press the SPACEBAR to instantly drop the shape", 
-    width/2 - 250, height/2 + 50);
-  text("press BACKSPACE key to return to the Main Menu", width/2 - 250, height/2 + 100);
-  text("press ESCAPE key to pause/unpause the game", width/2 - 250, height/2 + 150);
+    width/2 + 80, height/2);
+  text("press BACKSPACE key to return to the Main Menu", width/2 + 80, height/2 + 50);
+  text("press ESCAPE key to pause/unpause the game", width/2 + 80, height/2 + 100);
 
 
   showMouseCoordinates();
