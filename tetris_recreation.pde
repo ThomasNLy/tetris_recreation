@@ -1,10 +1,13 @@
 //------------GAMESTATES--------------
-final int MAINMENU = 0;
-final int CONTROLSMENU = 1;
-final int PLAYINGGAME = 2;
-int GAMESTATE = MAINMENU;
-//int GAMESTATE = CONTROLSMENU;
-//int GAMESTATE = PLAYINGGAME;
+public enum GAMESTATES{
+  MAINMENU,
+  CONTROLSMENU,
+  PLAYINGGAME
+}
+
+
+GAMESTATES CURRENTGAMESTATE = GAMESTATES.MAINMENU;
+
 boolean paused = false;
 
 //-------------MENU OPTIONS--------------
@@ -73,7 +76,7 @@ void setup() {
   points = 0;
   powerUpGridSpot = new PowerUp[boardWidth][boardHeight];
   
-  GAMESTATE = MAINMENU;
+  CURRENTGAMESTATE = GAMESTATES.MAINMENU;
 
   paused = false;
   
@@ -81,7 +84,7 @@ void setup() {
   highscore = loadData().getInt("highscore");
 }
 void draw() {
-  switch(GAMESTATE) {
+  switch(CURRENTGAMESTATE) {
   case MAINMENU:
     mainMenu();
     break;
@@ -96,15 +99,15 @@ void draw() {
 }
 
 void keyPressed() {
-  switch(GAMESTATE) {
+  switch(CURRENTGAMESTATE) {
   case MAINMENU:
 
     if (keyCode == ENTER) {
       if (MENU_OPTIONS[MENU_OPTION_SELECTED] == START_OPTION) {
-        GAMESTATE = PLAYINGGAME;
+        CURRENTGAMESTATE = GAMESTATES.PLAYINGGAME;
       } else if (MENU_OPTIONS[MENU_OPTION_SELECTED] == CONTROLS_OPTION) {
         println("controls Menu");
-        GAMESTATE = CONTROLSMENU;
+        CURRENTGAMESTATE = GAMESTATES.CONTROLSMENU;
       } else if (MENU_OPTIONS[MENU_OPTION_SELECTED] == EXIT_OPTION) {
         println("exiting game");
         exit();
@@ -126,30 +129,30 @@ void keyPressed() {
 
   case CONTROLSMENU:
     if (keyCode == BACKSPACE) {
-      GAMESTATE = MAINMENU;
+      CURRENTGAMESTATE = GAMESTATES.MAINMENU;
     }
     break;
   case PLAYINGGAME:
     if (!paused) {
-      if (key == 'a') {
+      if (key == 'a' || key == 'A') {
         currentShape.moveLeft();
       }
-      if (key == 'd') {
+      if (key == 'd' || key == 'D') {
         currentShape.moveRight();
       }
-      if (key == 's') {
+      if (key == 's' || key == 'S') {
         currentShape.moveDown();
       }
-      if (key == 'e') {
+      if (key == 'e' || key == 'E') {
         currentShape.rotateClockwise();
       }
-      if (key == 'q') {
+      if (key == 'q' || key == 'Q') {
         currentShape.rotateCounterClockwise();
       }
       if (keyCode == 32) {
         currentShape.dropShape();
       }
-      if (key == 'r') {
+      if (key == 'r' || key == 'R') {
         swapShape();
       }
 
