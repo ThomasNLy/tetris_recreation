@@ -440,7 +440,7 @@ void mainMenu() {
   text("Use W and S key to pick an option", width/2 - 190, height/2 + 200);
 
   circle(width/2 - 70, MENU_CURSOR_HIGHLIGHTED_SELECTION[MENU_OPTION_SELECTED] - 10, 20); 
-  showMouseCoordinates();
+  //showMouseCoordinates();
 }
 
 void controlsMenu() {
@@ -472,7 +472,7 @@ void controlsMenu() {
   text("press ESCAPE key to pause/unpause the game", width/2 + 80, height/2 + 100);
 
 
-  showMouseCoordinates();
+  //showMouseCoordinates();
 }
 
 void pauseMenu() {
