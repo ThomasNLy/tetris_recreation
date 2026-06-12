@@ -212,7 +212,7 @@ classDiagram
 
 4. Press the run button in the Processing IDE to run the code and play the game.
 
-    ![readme_images/run_sketch_image.png](readme_images/open_sketch_image3.png)
+    ![readme_images/run_sketch_image.png](readme_images/run_sketch_image.png)
 
 ## Gameplay Loop
 
