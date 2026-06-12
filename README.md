@@ -236,24 +236,24 @@ The predicted landing zone is an additional feature added in, where it’ll show
 
 ### Gameplay Controls
 
-Use the A and D keys to move the current shape either left or right.
+Use the **A** and **D** keys to move the current shape either left or right.
 
-Press the S key to move the shape down.
+Press the **S** key to move the shape down.
 
-Press the E or Q key to either rotate the shape counter clockwise or clockwise.
+Press the **E** or **Q** key to either rotate the shape counter clockwise or clockwise.
 
-Press the SPACEBAR to have the shape instantly drop to the bottom.
+Press the **SPACEBAR** to have the shape instantly drop to the bottom.
 
-Press the R key to swap your current shape with the next one shown in the preview window.
+Press the **R** key to swap your current shape with the next one shown in the preview window.
 
-Press the F key to use the Bar Shape Ability and turn your current shape into the Bar shape (it has limited usage).
+Press the **F** key to use the Bar Shape Ability and turn your current shape into the Bar shape (it has limited usage).
 
-Press the ESC key to pause/unpause the game.
+Press the **ESC** key to pause/unpause the game.
 
-Press the BACKSPACE key to return to the main menu when the game is paused.
+Press the **BACKSPACE** key to return to the main menu when the game is paused.
 
 ### Main Menu Controls
 
-Use the W and S keys to select a menu option.
+Use the **W** and **S** keys to select a menu option.
 
-Press the ENTER key to confirm your selection.
+Press the **ENTER** key to confirm your selection.
